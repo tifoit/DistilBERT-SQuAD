@@ -2,9 +2,9 @@ from model import Model
 
 model = Model('model')
 
-context = "We deliver every day from morning until late at night, and different restaurants will have different opening times. Visit the homepage or the app to see which restaurants are available in your area."
+context = "Netflix uses a variety of methods to help you find TV shows and movies to enjoy. You can find TV shows and movies through Recommendations or Search, or by browsing through categories."
 
-question = "When can I order?"
+question = "How do I find TV shows and movies on Netflix?"
 
 answer = model.predict(context, question)
 
