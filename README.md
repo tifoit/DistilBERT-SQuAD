@@ -47,7 +47,9 @@ The SQuAD fine-tuned model is available in my [S3 Bucket](https://distilbert-fin
 
 You can do this with 
 
-`model = DistilBertForQuestionAnswering.from_pretrained('distilbert-base-uncased-distilled-squad', config=config)`
+```python
+model = DistilBertForQuestionAnswering.from_pretrained('distilbert-base-uncased-distilled-squad', config=config)
+```
 
 # Making predictions
 
@@ -65,7 +67,7 @@ The data for SQuAD can be downloaded with the following links and should be save
 
 Training on one Tesla V100 16GB GPU, each epoch took around 9 minutes to complete, in comparison training on a single Quadro M4000 the time for each epoch took over 2 hours, so don't be alarmed if your training isn't lightning fast.
 
-```
+```python
 export SQUAD_DIR=/path/to/SQUAD
 
 python run_squad.py \
