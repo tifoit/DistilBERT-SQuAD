@@ -18,7 +18,7 @@ Victor Sahn of Hugging Face [wrote a great Medium post](https://medium.com/huggi
 
 If you are testing this on your own machine I would recommend you do the setup in a virtual environment, as not to affect the rest of your files. 
 
-In Python3 you can set up a virtual environment with `python3 -m venv /path/to/new/virtual/environment`. Or by installing virtualenv with pip by doing `pip3 install virtualenv`, creating it with `virtualenv venv` and finally activating it with `source venv/bin/activate`
+In Python3 you can set up a virtual environment with `python3 -m venv /path/to/new/virtual/environment`. Or by installing virtualenv with pip by doing `pip3 install virtualenv`, creating the environment with `virtualenv venv` and finally activating it with `source venv/bin/activate`
 
 You must have Python3
 
