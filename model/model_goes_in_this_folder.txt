@@ -1,3 +1,5 @@
 The fine tuned model goes in this directory, it must be named "pytorch_model.bin"
 
-The model download link will be provided soon
+Fine-tuned model download link: 
+
+https://distilbert-finetuned-model.s3.eu-west-2.amazonaws.com/pytorch_model.bin
