@@ -1,7 +1,5 @@
 # DistilBERT-SQuAD
 
-# WIP 🚧 - I will be deploying it with Flask soon!
-
 # The Stanford Question Answering Dataset (SQuAD)
 
 Stanford Question Answering Dataset (SQuAD) is a reading comprehension dataset, consisting of questions posed by crowdworkers on a set of Wikipedia articles, where the answer to every question is a segment of text, or span, from the corresponding reading passage, or the question might be unanswerable.
@@ -39,3 +37,5 @@ You can do this with
 # Making predictions
 
 ![alt text](images/carbon.png)
+
+# WIP 🚧 - I will be deploying it with Flask soon!
