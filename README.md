@@ -35,3 +35,7 @@ The SQuAD fine-tuned model is available in my [S3 Bucket](https://distilbert-fin
 You can do this with 
 
 `model = DistilBertForQuestionAnswering.from_pretrained('distilbert-base-uncased-distilled-squad', config=config)`
+
+# Making predictions
+
+https://carbon.now.sh/?bg=rgba(0%252C138%252C255%252C1)&t=lucario&wt=none&l=python&ds=true&dsyoff=20px&dsblur=68px&wc=true&wa=true&pv=56px&ph=56px&ln=false&fl=1&fm=Hack&fs=14px&lh=133%2525&si=false&es=2x&wm=false&code=from%252520model%252520import%252520Model%25250A%25250Amodel%252520%25253D%252520Model('model')%25250A%25250Acontext%252520%25253D%252520%252522Netflix%252520uses%252520a%252520variety%252520of%252520methods%252520to%252520help%252520you%252520find%252520TV%252520shows%252520and%252520movies%252520to%252520enjoy.%252520%25255C%25250A%252520%252520%252520%252520%252520%252520%252520%252520%252520%252520%252520You%252520can%252520find%252520TV%252520shows%252520and%252520movies%252520through%252520Recommendations%252520or%252520Search%25252C%252520or%252520by%252520browsing%252520through%252520categories.%252522%25250A%25250Aquestion%252520%25253D%252520%252522How%252520do%252520I%252520find%252520TV%252520shows%252520and%252520movies%252520on%252520Netflix%25253F%252522%25250A%25250Aanswer%252520%25253D%252520model.predict(context%25252C%252520question)%25250A%25250Aprint(%252522Question%25253A%252520%252522%252520%25252B%252520question)%25250Aprint(%252522Answer%25253A%252520%252522%252520%25252B%252520answer%25255B%252522answer%252522%25255D)%25250A
