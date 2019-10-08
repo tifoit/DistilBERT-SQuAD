@@ -1,6 +1,6 @@
 # DistilBERT-SQuAD
 
-# WIP  🚧
+# WIP 🚧 - I will be deploying it with Flask soon!
 
 # The Stanford Question Answering Dataset (SQuAD)
 
