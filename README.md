@@ -19,25 +19,29 @@ If you are testing this on your own machine I would recommend you do the setup i
 
 In Python3 you can set up a virtual environment with 
 
-`python3 -m venv /path/to/new/virtual/environment`
+```bash
+python3 -m venv /path/to/new/virtual/environment
+```
 
 Or by installing virtualenv with pip by doing 
-
-`pip3 install virtualenv`
-
+```bash
+pip3 install virtualenv
+```
 Then creating the environment with 
-
-`virtualenv venv` 
-
+```bash
+virtualenv venv
+```
 and finally activating it with
-
-`source venv/bin/activate`
+```bash
+source venv/bin/activate
+```
 
 You must have Python3
 
 Install the requirements with:
-
-`pip3 install -r requirements.txt`
+```bash
+pip3 install -r requirements.txt
+```
 
 ### SQuAD Fine-tuned model 
 
@@ -67,7 +71,7 @@ The data for SQuAD can be downloaded with the following links and should be save
 
 Training on one Tesla V100 16GB GPU, each epoch took around 9 minutes to complete, in comparison training on a single Quadro M4000 the time for each epoch took over 2 hours, so don't be alarmed if your training isn't lightning fast.
 
-```python
+```bash
 export SQUAD_DIR=/path/to/SQUAD
 
 python run_squad.py \
