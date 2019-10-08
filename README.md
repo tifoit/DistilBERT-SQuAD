@@ -65,7 +65,8 @@ The data for SQuAD can be downloaded with the following links and should be save
 
 Training on one Tesla V100 16GB GPU, each epoch took around 9 minutes to complete, in comparison training on a single Quadro M4000 the time for each epoch took over 2 hours, so don't be alarmed if your training isn't lightning fast.
 
-`export SQUAD_DIR=/path/to/SQUAD
+`
+export SQUAD_DIR=/path/to/SQUAD
 
 python run_squad.py \
   --model_type distilbert \
@@ -80,7 +81,8 @@ python run_squad.py \
   --num_train_epochs 2.0 \
   --max_seq_length 384 \
   --doc_stride 128 \
-  --output_dir /tmp/debug_squad/`
+  --output_dir /tmp/debug_squad/
+  `
   
   
 # WIP 🚧 - I will be deploying it with Flask soon!
