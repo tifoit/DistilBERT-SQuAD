@@ -32,4 +32,6 @@ The SQuAD fine-tuned model is available in my [S3 Bucket](https://distilbert-fin
 
 `distilbert-base-uncased-distilled-squad`. 
 
-You can do this with `model = DistilBertForQuestionAnswering.from_pretrained('distilbert-base-uncased-distilled-squad', config=config)`
+You can do this with 
+
+`model = DistilBertForQuestionAnswering.from_pretrained('distilbert-base-uncased-distilled-squad', config=config)`
