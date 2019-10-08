@@ -25,3 +25,5 @@ You must have Python3
 Install the requirements with:
 
 `pip3 install -r requirements.txt`
+
+The SQuAD fine-tuned model is available in my [S3 Bucket](https://distilbert-finetuned-model.s3.eu-west-2.amazonaws.com/pytorch_model.bin) or alternatively inside the model.py file you can specify the type of model you wish to use, the one I have provided or a Hugging Face fine-tuned SQuAD model `distilbert-base-uncased-distilled-squad`. You can do this with `model = DistilBertForQuestionAnswering.from_pretrained('distilbert-base-uncased-distilled-squad', config=config)`
