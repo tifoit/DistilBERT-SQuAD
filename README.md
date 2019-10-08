@@ -38,8 +38,4 @@ You can do this with
 
 # Making predictions
 
-<iframe
-  src="https://carbon.now.sh/embed/?bg=rgba(0%2C138%2C255%2C1)&t=lucario&wt=none&l=python&ds=true&dsyoff=20px&dsblur=68px&wc=true&wa=true&pv=56px&ph=56px&ln=false&fl=1&fm=Hack&fs=14px&lh=133%25&si=false&es=2x&wm=false&code=from%2520model%2520import%2520Model%250A%250Amodel%2520%253D%2520Model('model')%250A%250Acontext%2520%253D%2520%2522Netflix%2520uses%2520a%2520variety%2520of%2520methods%2520to%2520help%2520you%2520find%2520TV%2520shows%2520and%2520movies%2520to%2520enjoy.%2520%255C%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520You%2520can%2520find%2520TV%2520shows%2520and%2520movies%2520through%2520Recommendations%2520or%2520Search%252C%2520or%2520by%2520browsing%2520through%2520categories.%2522%250A%250Aquestion%2520%253D%2520%2522How%2520do%2520I%2520find%2520TV%2520shows%2520and%2520movies%2520on%2520Netflix%253F%2522%250A%250Aanswer%2520%253D%2520model.predict(context%252C%2520question)%250A%250Aprint(%2522Question%253A%2520%2522%2520%252B%2520question)%250Aprint(%2522Answer%253A%2520%2522%2520%252B%2520answer%255B%2522answer%2522%255D)%250A"
-  style="transform:scale(0.7); width:1024px; height:473px; border:0; overflow:hidden;"
-  sandbox="allow-scripts allow-same-origin">
-</iframe>
+
