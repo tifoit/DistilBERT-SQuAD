@@ -59,7 +59,7 @@ model = DistilBertForQuestionAnswering.from_pretrained('distilbert-base-uncased-
 
 ![alt text](images/carbon.png)
 
-# How to train Distil(BERT)
+# How to train (Distil)BERT
 
 The data for SQuAD can be downloaded with the following links and should be saved in a $SQUAD_DIR directory.
 
