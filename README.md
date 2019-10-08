@@ -40,3 +40,9 @@ You can do this with
 ![alt text](images/carbon.png)
 
 # WIP 🚧 - I will be deploying it with Flask soon!
+
+# References 
+
+- <https://github.com/huggingface/transformers>
+- <https://medium.com/huggingface/distilbert-8cf3380435b5>
+- 
