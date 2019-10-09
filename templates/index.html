@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="/static/style.css">
+    <title>DistilBERT QA</title>
+  </head>
+  <body>
+
+    <form action="/">
+      <div id="input">
+        <br>
+
+        <center>
+          <h1>DistilBERT QA Demo </h1>
+          <p>Enter context:</p>
+        </center>
+
+        <center>
+          <textarea id="context" name="context" rows="8" cols="80" required></textarea>
+        </center>
+
+        <center>
+          <p>Enter question:</p>
+          <input id="question" align="center" type="text" name="question" placeholder="enter question" required>
+        </center>
+
+        <br>
+
+        <center>
+          <button id="submit-btn" type="submit" value="Submit">Submit</button>
+        </center>
+
+        <br>
+
+        <center>
+          <p>
+            {{ question }}
+          </p>
+          <p>
+            {{ answer }}
+          </p>
+        </center>
+      </div>
+    </form>
+
+  </body>
+</html>

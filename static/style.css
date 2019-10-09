@@ -1,0 +1,36 @@
+body {
+  font-family: "Open Sans", sans-serif;
+  text-align: center;
+  font-weight: lighter;
+}
+
+h1{
+  font-weight: lighter;
+}
+
+#input input{
+  text-align: center;
+  display: block;
+  width: 320px;
+  height: 40px;
+  padding: 10px;
+  background: rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255);
+  border-radius: 5px;
+}
+
+#input #context{
+  border-radius: 5px;
+}
+
+#input #submit-btn{
+  background: rgb(41, 204, 158);
+  border: none;
+  width: 340px;
+  height: 40px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  cursor: pointer;
+  border-radius: 5px;
+}
