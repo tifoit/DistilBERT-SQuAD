@@ -3,45 +3,35 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="BERT based question and answer model demo">
     <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="/static/animate.min.css">
     <title>DistilBERT QA</title>
   </head>
   <body>
 
     <form action="/">
-      <div id="input">
+      <div class="main">
         <br>
 
-        <center>
-          <h1>DistilBERT QA Demo </h1>
-          <p>Enter context:</p>
-        </center>
+        <h1>DistilBERT QA Demo </h1>
+        <p>Enter context:</p>
 
-        <center>
-          <textarea id="context" name="context" rows="8" cols="80" required></textarea>
-        </center>
+        <textarea id="context" name="context" rows="8" cols="80" required></textarea>
 
-        <center>
-          <p>Enter question:</p>
-          <input id="question" align="center" type="text" name="question" placeholder="enter question" required>
-        </center>
-
-        <br>
-
-        <center>
-          <button id="submit-btn" type="submit" value="Submit">Submit</button>
-        </center>
+        <p>Enter question:</p>
+        <input id="question" align="center" type="text" name="question" placeholder="enter question" required>
+        {% if answer: %}
+          <div class="result animated fadeIn">{{question}}</div>
+          <div class="result animated fadeIn">{{answer}}</div>
+        {% endif %}
 
         <br>
 
-        <center>
-          <p>
-            {{ question }}
-          </p>
-          <p>
-            {{ answer }}
-          </p>
-        </center>
+        <button id="submit-btn" type="submit" value="Submit">Submit</button>
+
+        <br>
+
       </div>
     </form>
 
