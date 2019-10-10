@@ -59,6 +59,10 @@ model = DistilBertForQuestionAnswering.from_pretrained('distilbert-base-uncased-
 
 ![alt text](images/carbon.png)
 
+You can also make predictions by using the provided demo which is deployed with Flask to handle the interactions with the UI.
+
+![alt text](images/demo.png)
+
 # How to train (Distil)BERT
 
 The data for SQuAD can be downloaded with the following links and should be saved in a $SQUAD_DIR directory.
@@ -89,9 +93,6 @@ python run_squad.py \
   --doc_stride 128 \
   --output_dir /tmp/debug_squad/
   ```
-  
-  
-# WIP 🚧 - I will be deploying it with Flask soon!
 
 # References 
 
