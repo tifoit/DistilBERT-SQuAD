@@ -1,5 +1,7 @@
 # DistilBERT-SQuAD
 
+Try the demo at [qa.oliverproud.com](https://qa.oliverproud.com)
+
 # What is DistilBERT?
 
 Thanks to the brilliant people at [Hugging Face 🤗](https://huggingface.co/) we now have DistilBERT, which stands for Distilated-BERT. DistilBERT is a small, fast, cheap and light Transformer model based on Bert architecture. It has 40% less parameters than `bert-base-uncased`, runs 60% faster while preserving 97% of BERT's performance as measured on the GLUE language understanding benchmark. DistilBERT is trained using knowledge distillation, a technique to compress a large model called the teacher into a smaller model called the student. By distillating Bert, we obtain a smaller Transformer model that bears a lot of similarities with the original BERT model while being lighter, smaller and faster to run. DistilBERT is thus an interesting option to put large-scaled trained Transformer model into production. [Transformers - Hugging Face repository](https://github.com/huggingface/transformers)
@@ -57,9 +59,11 @@ model = DistilBertForQuestionAnswering.from_pretrained('distilbert-base-uncased-
 
 # Making predictions
 
+You can test the model using `test.py` or using the provided Flask interface.
+
 ![alt text](images/carbon.png)
 
-You can also make predictions by using the provided demo which is deployed with Flask to handle the interactions with the UI.
+If you would like to try out the demo then head to [qa.oliverproud.com](https://qa.oliverproud.com)
 
 ![alt text](images/demo.png)
 
@@ -92,7 +96,7 @@ python run_squad.py \
   --max_seq_length 384 \
   --doc_stride 128 \
   --output_dir /tmp/debug_squad/
-  ```
+```
 
 # References 
 
