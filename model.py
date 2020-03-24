@@ -1,17 +1,14 @@
-from __future__ import absolute_import, division, print_function
-
-import collections
-import logging
-import math
-
-import numpy as np
-import torch
-
 from transformers import (WEIGHTS_NAME, DistilBertConfig, DistilBertForQuestionAnswering, DistilBertTokenizer)
-
-from torch.utils.data import (DataLoader, SequentialSampler, TensorDataset)
-
 from prediction_utils import (read_squad_examples, convert_examples_to_features, to_list, write_predictions)
+from torch.utils.data import (DataLoader, SequentialSampler, TensorDataset)
+from pathlib  import Path
+import numpy as np
+import collections
+import requests
+import logging
+import torch
+import math
+import os
 
 RawResult = collections.namedtuple("RawResult",
                                    ["unique_id", "start_logits", "end_logits"])
@@ -31,9 +28,21 @@ class Model:
         self.model.eval()
 
     def model_load(self, path:str):
+
+        s3_model_url = 'https://distilbert-finetuned-model.s3.eu-west-2.amazonaws.com/pytorch_model.bin'
+
+        path_to_model = os.path.join(path, 'pytorch_model.bin')
+        if not os.path.exists(path_to_model):
+            print("Model weights not found, downloading from S3...")
+            os.makedirs(os.path.join(path), exist_ok=True)
+            filename = Path(path_to_model)
+            r = requests.get(s3_model_url)
+            filename.write_bytes(r.content)
+
+
         config = DistilBertConfig.from_pretrained(path + "/config.json")
         tokenizer = DistilBertTokenizer.from_pretrained(path, do_lower_case=self.do_lower_case)
-        model = DistilBertForQuestionAnswering.from_pretrained(path, from_tf=False, config=config)
+        model = DistilBertForQuestionAnswering.from_pretrained(path_to_model, from_tf=False, config=config)
         return model, tokenizer
 
     def predict(self, context, question):
