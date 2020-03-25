@@ -7,6 +7,6 @@ venv
 train
 .git
 .DS_Store
-images
+/images
 model/model_goes_in_this_folder.txt
 model/pytorch_model.bin
