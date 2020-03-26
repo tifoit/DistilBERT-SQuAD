@@ -13,7 +13,6 @@ import os
 RawResult = collections.namedtuple("RawResult",
                                    ["unique_id", "start_logits", "end_logits"])
 
-
 class Model:
 
     def __init__(self, path:str):
@@ -39,13 +38,15 @@ class Model:
             r = requests.get(s3_model_url)
             filename.write_bytes(r.content)
 
-
         config = DistilBertConfig.from_pretrained(path + "/config.json")
         tokenizer = DistilBertTokenizer.from_pretrained(path, do_lower_case=self.do_lower_case)
         model = DistilBertForQuestionAnswering.from_pretrained(path_to_model, from_tf=False, config=config)
         return model, tokenizer
 
     def predict(self, context, question):
+
+        context = context.lower()
+        question = question.lower()
 
         examples = read_squad_examples(context, question)
         features = convert_examples_to_features(examples, self.tokenizer, self.max_seq_length, self.doc_stride, self.max_query_length)
@@ -57,7 +58,6 @@ class Model:
         all_example_index = torch.arange(all_input_ids.size(0), dtype=torch.long)
         dataset = TensorDataset(all_input_ids, all_input_mask, all_segment_ids,
                                 all_example_index)
-
 
         eval_sampler = SequentialSampler(dataset)
         eval_dataloader = DataLoader(dataset, sampler=eval_sampler, batch_size=self.eval_batch_size)
