@@ -10,6 +10,7 @@ from transformers.tokenization_bert import BasicTokenizer, whitespace_tokenize
 
 from torch.utils.data import DataLoader, SequentialSampler, TensorDataset
 
+
 class SquadExample(object):
     """
     A single training/test example for the Squad dataset.
@@ -49,6 +50,7 @@ class SquadExample(object):
             s += ", is_impossible: %r" % (self.is_impossible)
         return s
 
+
 class InputFeatures(object):
     """A single set of features of data."""
 
@@ -83,6 +85,7 @@ class InputFeatures(object):
         self.start_position = start_position
         self.end_position = end_position
         self.is_impossible = is_impossible
+
 
 def read_squad_examples(context, question):
     """Convert context and question into a list of SquadExample."""
@@ -123,6 +126,7 @@ def read_squad_examples(context, question):
         end_position=end_position)
 
     return example
+
 
 def convert_examples_to_features(example, tokenizer, max_seq_length,
                                  doc_stride, max_query_length,
@@ -209,7 +213,8 @@ def convert_examples_to_features(example, tokenizer, max_seq_length,
         # Paragraph
         for i in range(doc_span.length):
             split_token_index = doc_span.start + i
-            token_to_orig_map[len(tokens)] = tok_to_orig_index[split_token_index]
+            token_to_orig_map[len(
+                tokens)] = tok_to_orig_index[split_token_index]
 
             is_max_context = _check_is_max_context(doc_spans, doc_span_index,
                                                    split_token_index)
@@ -271,6 +276,7 @@ def convert_examples_to_features(example, tokenizer, max_seq_length,
 
     return features
 
+
 def _check_is_max_context(doc_spans, cur_span_index, position):
     """Check if this is the 'max context' doc span for the token."""
 
@@ -300,7 +306,8 @@ def _check_is_max_context(doc_spans, cur_span_index, position):
             continue
         num_left_context = position - doc_span.start
         num_right_context = end - position
-        score = min(num_left_context, num_right_context) + 0.01 * doc_span.length
+        score = min(num_left_context, num_right_context) + \
+            0.01 * doc_span.length
         if best_score is None or score > best_score:
             best_score = score
             best_span_index = span_index
@@ -310,6 +317,7 @@ def _check_is_max_context(doc_spans, cur_span_index, position):
 
 RawResult = collections.namedtuple("RawResult",
                                    ["unique_id", "start_logits", "end_logits"])
+
 
 def write_predictions(example, all_features, all_results, n_best_size,
                       max_answer_length, do_lower_case):
@@ -381,10 +389,12 @@ def write_predictions(example, all_features, all_results, n_best_size,
                 break
             feature = features[pred.feature_index]
             if pred.start_index > 0:  # this is a non-null prediction
-                tok_tokens = feature.tokens[pred.start_index:(pred.end_index + 1)]
+                tok_tokens = feature.tokens[pred.start_index:(
+                    pred.end_index + 1)]
                 orig_doc_start = feature.token_to_orig_map[pred.start_index]
                 orig_doc_end = feature.token_to_orig_map[pred.end_index]
-                orig_tokens = example.doc_tokens[orig_doc_start:(orig_doc_end + 1)]
+                orig_tokens = example.doc_tokens[orig_doc_start:(
+                    orig_doc_end + 1)]
                 tok_text = " ".join(tok_tokens)
 
                 # De-tokenize WordPieces that have been split off.
@@ -430,13 +440,14 @@ def write_predictions(example, all_features, all_results, n_best_size,
         probs = _compute_softmax(total_scores)
 
         all_predictions = {
-        "answer": nbest[0].text,
-        "probability": probs[0],
-        "start_logit": nbest[0].start_logit,
-        "end_logit": nbest[0].end_logit
+            "answer": nbest[0].text,
+            "probability": probs[0],
+            "start_logit": nbest[0].start_logit,
+            "end_logit": nbest[0].end_logit
         }
 
     return all_predictions
+
 
 def get_final_text(pred_text, orig_text, do_lower_case, verbose_logging=False):
     """Project the tokenized prediction back to the original text."""
@@ -536,7 +547,8 @@ def get_final_text(pred_text, orig_text, do_lower_case, verbose_logging=False):
 
 def _get_best_indexes(logits, n_best_size):
     """Get the n-best logits from a list."""
-    index_and_score = sorted(enumerate(logits), key=lambda x: x[1], reverse=True)
+    index_and_score = sorted(
+        enumerate(logits), key=lambda x: x[1], reverse=True)
 
     best_indexes = []
     for i in range(len(index_and_score)):
@@ -567,6 +579,7 @@ def _compute_softmax(scores):
     for score in exp_scores:
         probs.append(score / total_sum)
     return probs
+
 
 def to_list(tensor):
     return tensor.detach().cpu().tolist()

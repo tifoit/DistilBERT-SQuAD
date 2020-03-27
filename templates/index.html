@@ -1,41 +1,44 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, maximum-scale=1">
-    <meta name="description" content="BERT based question and answer model demo">
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
-    <link rel="stylesheet" href="/static/css/style.css">
-    <link rel="stylesheet" href="/static/css/animate.min.css">
-    <link rel="shortcut icon" type="image/png" href="/static/logo.png">
-    <title>DistilBERT QA</title>
-  </head>
-  <body>
 
-    <form action="/">
-      <div class="animated fadeIn main">
-        <br>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, maximum-scale=1">
+  <meta name="description" content="BERT based question and answer model demo">
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/style.css">
+  <link rel="stylesheet" href="/static/css/animate.min.css">
+  <link rel="shortcut icon" type="image/png" href="/static/logo.png">
+  <title>DistilBERT QA</title>
+</head>
 
-        <h1>DistilBERT QA Demo </h1>
-        <p>Enter context:</p>
+<body>
 
-        <textarea id="context" name="context" rows="8" cols="80" required></textarea>
+  <form action="/">
+    <div class="animated fadeIn main">
+      <br>
 
-        <p>Enter question:</p>
+      <h1>DistilBERT QA Demo </h1>
+      <p>Enter context:</p>
 
-        <div class="inputWrapper">
-          <input id="question" align="center" type="text" name="question" placeholder="enter question" required>
-          <button id="submit-btn" type="submit" value="Submit">Submit</button>
-        </div>
+      <textarea id="context" name="context" rows="8" cols="80" required></textarea>
 
-        {% if answer: %}
-          <div class="result animated fadeIn">{{question}}</div>
-          <div class="result animated fadeIn">{{answer}}</div>
-        {% endif %}
+      <p>Enter question:</p>
 
-
+      <div class="inputWrapper">
+        <input id="question" align="center" type="text" name="question" placeholder="enter question" required>
+        <button id="submit-btn" type="submit" value="Submit">Submit</button>
       </div>
-    </form>
 
-  </body>
+      {% if answer: %}
+      <div class="result animated fadeIn">{{question}}</div>
+      <div class="result animated fadeIn">{{answer}}</div>
+      {% endif %}
+
+
+    </div>
+  </form>
+
+</body>
+
 </html>

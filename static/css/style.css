@@ -1,21 +1,21 @@
-body{
+body {
   font-family: "Open Sans", sans-serif;
   text-align: center;
   font-weight: lighter;
 }
 
-.main h1{
+.main h1 {
   font-weight: lighter;
   padding: 20px;
   margin: 0 auto;
 }
 
-.main p{
+.main p {
   margin: 0 auto;
   padding: 20px;
 }
 
-.main input{
+.main input {
   text-align: center;
   display: block;
   width: 320px;
@@ -42,7 +42,7 @@ body{
   margin-right: auto;
 }
 
-.result{
+.result {
   text-align: inherit;
   display: block;
   width: 320px;
@@ -53,10 +53,9 @@ body{
   border-radius: 15px;
   margin: 0 auto;
   animation-duration: 1s;
-
 }
 
-.main #submit-btn{
+.main #submit-btn {
   background: rgb(41, 204, 158);
   border: none;
   width: 340px;
@@ -69,6 +68,6 @@ body{
   border-radius: 5px;
 }
 
-.inputWrapper{
+.inputWrapper {
   text-align: center;
 }
