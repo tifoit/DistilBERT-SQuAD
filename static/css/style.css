@@ -42,6 +42,12 @@ body {
   margin-right: auto;
 }
 
+hr {
+  border-width: 1px;
+  border: 0.5px solid #cfd4da;
+  width: 340px;
+}
+
 .result {
   text-align: inherit;
   display: block;
