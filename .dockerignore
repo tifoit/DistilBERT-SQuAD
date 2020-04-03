@@ -10,3 +10,4 @@ model/model_goes_in_this_folder.txt
 model/pytorch_model.bin
 /images
 .git
+LICENSE
