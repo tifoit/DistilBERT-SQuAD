@@ -21,22 +21,30 @@ If you are testing this on your own machine I would recommend you run it in a vi
 
 ### Docker
 
-To use my docker image:
+To use my docker repository:
 
 ```bash
-docker pull oliverproud/bert-classification-flask
-```
-
-Build the container:
-
-```bash
-docker build -t bert-classification-flask .
+docker pull oliverproud/distilbert-squad-flask
 ```
 
 Run the container:
 
 ```bash
-docker run -dp 8080:8080 bert-classification-flask
+docker run -dp 8080:8080 oliverproud/distilbert-squad-flask
+```
+
+or Git Pull this repository and
+
+Build the container:
+
+```bash
+docker build -t distilbert-squad-flask .
+```
+
+Run the container:
+
+```bash
+docker run -dp 8080:8080 distilbert-squad-flask
 ```
 
 ### Python venv
