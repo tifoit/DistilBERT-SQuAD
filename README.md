@@ -17,19 +17,41 @@ https://rajpurkar.github.io/SQuAD-explorer/
 
 # Installation
 
-If you are testing this on your own machine I would recommend you do the setup in a virtual environment, as not to affect the rest of your files. 
+If you are testing this on your own machine I would recommend you run it in a virtual environment or use Docker, as not to affect the rest of your files.
 
-In Python3 you can set up a virtual environment with 
+### Docker
+
+To use my docker image:
+
+```bash
+docker pull oliverproud/bert-classification-flask
+```
+
+Build the container:
+
+```bash
+docker build -t bert-classification-flask .
+```
+
+Run the container:
+
+```bash
+docker run -dp 8080:8080 bert-classification-flask
+```
+
+### Python venv
+
+In Python3 you can set up a virtual environment with
 
 ```bash
 python3 -m venv /path/to/new/virtual/environment
 ```
 
-Or by installing virtualenv with pip by doing 
+Or by installing virtualenv with pip by doing
 ```bash
 pip3 install virtualenv
 ```
-Then creating the environment with 
+Then creating the environment with
 ```bash
 virtualenv venv
 ```
@@ -45,15 +67,17 @@ Install the requirements with:
 pip3 install -r requirements.txt
 ```
 
+### Contact
+
 If you have any questions, feedback or problems of any kind, get in touch by messaging me on [Twitter - @oliverwproud](https://twitter.com/oliverwproud) or by submitting an issue.
 
-### SQuAD Fine-tuned model 
+### SQuAD Fine-tuned model
 
 The SQuAD fine-tuned model is available in my [S3 Bucket](https://distilbert-finetuned-model.s3.eu-west-2.amazonaws.com/pytorch_model.bin) or alternatively inside the model.py file you can specify the type of model you wish to use, the one I have provided, or a Hugging Face fine-tuned SQuAD model
 
-`distilbert-base-uncased-distilled-squad`. 
+`distilbert-base-uncased-distilled-squad`.
 
-You can do this with 
+You can do this with
 
 ```python
 model = DistilBertForQuestionAnswering.from_pretrained('distilbert-base-uncased-distilled-squad', config=config)
@@ -100,7 +124,7 @@ python run_squad.py \
   --output_dir /tmp/debug_squad/
 ```
 
-# References 
+# References
 
 - <https://github.com/huggingface/transformers>
 - <https://medium.com/huggingface/distilbert-8cf3380435b5>
