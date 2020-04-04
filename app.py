@@ -1,8 +1,7 @@
 from flask import request
-from model import Model
+from model import model
 import flask
 
-model = Model('model')
 
 app = flask.Flask(__name__)
 
