@@ -1,5 +1,7 @@
 # DistilBERT-SQuAD
 
+![Build and Deploy to Cloud Run](https://github.com/oliverproud/DistilBERT-SQuAD/workflows/Build%20and%20Deploy%20to%20Cloud%20Run/badge.svg?branch=master)
+
 Try the demo at [qa.oliverproud.com](https://qa.oliverproud.com)
 
 # What is DistilBERT?
