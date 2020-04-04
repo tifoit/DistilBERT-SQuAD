@@ -1,7 +1,7 @@
 from transformers import (WEIGHTS_NAME, DistilBertConfig,DistilBertForQuestionAnswering, DistilBertTokenizer)
 from prediction_utils import (read_squad_examples, convert_examples_to_features, to_list, write_predictions)
 from torch.utils.data import (DataLoader, SequentialSampler, TensorDataset)
-from download import path_to_model, path
+from download import download_model
 from pathlib import Path
 import numpy as np
 import collections
@@ -25,10 +25,13 @@ class Model:
         self.n_best_size = 20
         self.max_answer_length = 30
         self.eval_batch_size = 1
-        self.model, self.tokenizer = self.model_load()
+        self.model, self.tokenizer = self.model_load(path)
         self.model.eval()
 
-    def model_load(self):
+    def model_load(self, path):
+
+        s3_model_url = 'https://distilbert-finetuned-model.s3.eu-west-2.amazonaws.com/pytorch_model.bin'
+        path_to_model = download_model(s3_model_url, model_name="pytorch_model.bin")
 
         config = DistilBertConfig.from_pretrained(path + "/config.json")
         tokenizer = DistilBertTokenizer.from_pretrained(path, do_lower_case=self.do_lower_case)
@@ -82,3 +85,5 @@ class Model:
         answer = write_predictions(examples, features, all_results,
                                    self.do_lower_case, self.n_best_size, self.max_answer_length)
         return answer
+
+model = Model('model')
