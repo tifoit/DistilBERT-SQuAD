@@ -15,7 +15,7 @@ COPY requirements.txt .
 
 RUN pip install -r requirements.txt
 
-RUN python model.py
+RUN python download.py
 
 # Run the web service on container startup. Here we use the gunicorn
 # webserver, with one worker process and 8 threads.
