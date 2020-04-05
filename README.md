@@ -1,6 +1,8 @@
 # DistilBERT-SQuAD
 
 ![Build and Deploy to Cloud Run](https://github.com/oliverproud/DistilBERT-SQuAD/workflows/Build%20and%20Deploy%20to%20Cloud%20Run/badge.svg?branch=master)
+[![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/oliverproud/distilbert-squad-flask?logo=Docker&logoColor=FFF)](https://hub.docker.com/repository/docker/oliverproud/distilbert-squad-flask)
+[![Website](https://img.shields.io/website?down_message=offline&up_message=online&url=https%3A%2F%2Fqa.oliverproud.com)](https://qa.oliverproud.com)
 
 Try the demo at [qa.oliverproud.com](https://qa.oliverproud.com)
 
