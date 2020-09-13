@@ -95,6 +95,13 @@ You can do this with
 model = DistilBertForQuestionAnswering.from_pretrained('distilbert-base-uncased-distilled-squad', config=config)
 ```
 
+### Deploying to Google Cloud Run
+Please see this [quick start guide](https://cloud.google.com/run/docs/quickstarts/build-and-deploy#python) from Google on how to deploy to Google Cloud Run.
+
+If you follow just part one and create the project, then navigate to the Cloud Run console and find the button named `SET UP CONTINUOUS DEPLOYMENT` and from there you will be able to deploy directly from your GitHub repo using the Dockerfile.
+
+Alternatively, follow the entire quick start guide.
+
 # Making predictions
 
 You can test the model using `test.py` or using the provided Flask interface.
