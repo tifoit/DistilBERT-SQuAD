@@ -1,10 +1,7 @@
 # DistilBERT-SQuAD
 
-![Build and Deploy to Cloud Run](https://github.com/oliverproud/DistilBERT-SQuAD/workflows/Build%20and%20Deploy%20to%20Cloud%20Run/badge.svg?branch=master)
-[![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/oliverproud/distilbert-squad-flask?logo=Docker&logoColor=FFF)](https://hub.docker.com/repository/docker/oliverproud/distilbert-squad-flask)
 [![Website](https://img.shields.io/website?down_message=offline&up_message=online&url=https%3A%2F%2Fqa.oliverproud.com)](https://qa.oliverproud.com)
 
-Try the demo at [qa.oliverproud.com](https://qa.oliverproud.com)
 
 # What is DistilBERT?
 
@@ -94,23 +91,6 @@ You can do this with
 ```python
 model = DistilBertForQuestionAnswering.from_pretrained('distilbert-base-uncased-distilled-squad', config=config)
 ```
-
-### Deploying to Google Cloud Run
-Please see this [quick start guide](https://cloud.google.com/run/docs/quickstarts/build-and-deploy#python) from Google on how to deploy to Google Cloud Run.
-
-If you follow just part one and create the project, then navigate to the Cloud Run console and find the button named `SET UP CONTINUOUS DEPLOYMENT` and from there you will be able to deploy directly from your GitHub repo using the Dockerfile.
-
-Alternatively, follow the entire quick start guide.
-
-# Making predictions
-
-You can test the model using `test.py` or using the provided Flask interface.
-
-![alt text](images/carbon.png)
-
-If you would like to try out the demo then head to [qa.oliverproud.com](https://qa.oliverproud.com)
-
-![alt text](images/demo.png)
 
 # How to train (Distil)BERT
 
