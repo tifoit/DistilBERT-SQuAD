@@ -3,6 +3,7 @@ from model import model
 
 import flask
 import json
+import datetime
 
 app = flask.Flask(__name__)
 
@@ -11,6 +12,16 @@ app = flask.Flask(__name__)
 def predict():
     """Predicts an answer given some chunks of text"""
     body = request.get_json()
+
+    if not body:
+        return error_message('Missing input body', 400)
+
+    if 'question' not in body:
+        return error_message('The prediction needs a question', 400)
+
+    if 'chunks' not in body:
+        return error_message('The prediction needs at least one chunk', 400)
+
     question = str(body['question'])
     chunks = body['chunks']
     style = body['style'] if 'style' in body else 'highlight'
@@ -41,6 +52,15 @@ def highlight(text, answer, style):
         return pre + '<span class="' + style + '">' + inner + '</span>' + post
     else:
         return text
+
+
+def error_message(message, status):
+    """Builds a JSON response with an error message"""
+    return Response(json.dumps({
+        'message': message,
+        'status': status,
+        'timestamp': datetime.datetime.now().isoformat()
+    }), status, mimetype='application/json')
 
 
 if __name__ == "__main__":
