@@ -7,7 +7,6 @@ on:
 
 jobs:
   pi-publish-docker-image:
-    needs: dockerfile
     runs-on: ubuntu-latest
     steps:
       - name: Checkout the code
@@ -38,7 +37,6 @@ jobs:
 
 
   fuse-publish-docker-image:
-    needs: dockerfile
     runs-on: ubuntu-latest
     steps:
       - name: Checkout the code
