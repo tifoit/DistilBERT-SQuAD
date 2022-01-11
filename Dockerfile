@@ -2,6 +2,10 @@
 # https://hub.docker.com/_/python
 FROM python:3.7-slim
 
+ENV WORKERS=1
+ENV THREADS=8
+ENV TIMEOUT=900
+
 # Copy local code to the container image.
 ENV APP_HOME /app
 WORKDIR $APP_HOME
@@ -15,7 +19,8 @@ COPY requirements.txt .
 
 RUN pip install -r requirements.txt
 
-RUN python model.py
+# Don't download the model. It's better to get it once and mount it multiple times.
+# RUN python model.py
 
 # Run the web service on container startup. Here we use the gunicorn
 # webserver, with one worker process and 8 threads.
@@ -24,4 +29,4 @@ RUN python model.py
 
 EXPOSE 8080
 
-CMD ["gunicorn", "--bind", "0.0.0.0:8080",  "--workers", "1", "--threads", "8", "app:app", "--timeout", "900"]
+ENTRYPOINT gunicorn --bind 0.0.0.0:8080 --workers ${WORKERS} --threads ${THREADS} app:app --timeout ${TIMEOUT}

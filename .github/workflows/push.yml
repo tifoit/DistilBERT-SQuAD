@@ -1,0 +1,69 @@
+name: Build and publish
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ hotfix, develop ]
+
+jobs:
+  pi-publish-docker-image:
+    needs: dockerfile
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Build the image
+        run: docker build -t distilbert-squad-flask .
+
+      - name: PI - Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.PI_AWS_ACCESS_KEY_ID  }}
+          aws-secret-access-key: ${{ secrets.PI_AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: PI - Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: PI - Push latest to Amazon ECR
+        env:
+          CONTAINER_REGISTRY: 774755900012.dkr.ecr.us-east-1.amazonaws.com
+        run: |
+          docker tag distilbert-squad-flask ${CONTAINER_REGISTRY}/pureinsights/distilbert-squad-flask:latest
+          docker push ${CONTAINER_REGISTRY}/pureinsights/distilbert-squad-flask:latest
+
+
+  fuse-publish-docker-image:
+    needs: dockerfile
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Build the image
+        run: docker build -t distilbert-squad-flask .
+
+      - name: Fuse - Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID  }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-west-1
+
+      - name: Fuse - Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Fuse - Push latest to Amazon ECR
+        if: contains(github.ref, 'develop')
+        env:
+          CONTAINER_REGISTRY: 129348809522.dkr.ecr.eu-west-1.amazonaws.com
+        run: |
+          docker tag distilbert-squad-flask ${CONTAINER_REGISTRY}/pureinsights/distilbert-squad-flask:latest
+          docker push ${CONTAINER_REGISTRY}/pureinsights/distilbert-squad-flask:latest
