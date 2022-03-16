@@ -1,89 +1,95 @@
-from transformers import (WEIGHTS_NAME, DistilBertConfig,DistilBertForQuestionAnswering, DistilBertTokenizer)
-from prediction_utils import (read_squad_examples, convert_examples_to_features, to_list, write_predictions)
-from torch.utils.data import (DataLoader, SequentialSampler, TensorDataset)
-from download import download_model
+import json
+from os import environ
 from pathlib import Path
-import numpy as np
-import collections
-import requests
-import logging
-import torch
-import math
-import os
 
-RawResult = collections.namedtuple("RawResult",
-                                   ["unique_id", "start_logits", "end_logits"])
+from transformers import (AutoTokenizer, AutoModelForQuestionAnswering, pipeline)
+
+from download import download_model
+
+
+def download_models(models, path):
+    """
+    Download models from Hugging Face repositories into a specific folder.
+    If a folder already exists for a model then it is assumed it was downloaded before.
+    @param path: Path where models will be stored.
+    @param models: JSON objects with models to download.
+    @return:A tuple of pipelines and the default one.
+    """
+    for model in models:
+        download_model(path, model)
+
+
+def load_models(path):
+    """
+    Iterates over a specific path and loads all models available.
+    For each model a pipeline is created and stored in a pipelines map,
+    where the key is the model name (as defined in the config.json file)
+    or the folder path if that value is not present.
+    @param path: Location to scan.
+    @return: Tuple consisting of: a map of pipelines and a default pipeline.
+    """
+    pipelines = {}
+    default_pipeline = None
+    config_file = 'config.json'
+    for config_file_path in Path(path).rglob(config_file):
+        model_path = str(config_file_path.parent)
+
+        name_path_key = '_name_or_path'
+        with open(config_file_path) as jsonFile:
+            json_object = json.load(jsonFile)
+            # Looks for the file name in the config file. If not present then it will use the path as the name.
+            model_name = json_object[name_path_key] if name_path_key in json_object else str(
+                config_file_path.parent).replace(path, '')
+
+        question_answer_tokenizer = AutoTokenizer.from_pretrained(model_path)
+        question_answer_model = AutoModelForQuestionAnswering.from_pretrained(model_path)
+
+        current_pipeline = pipeline('question-answering',
+                                    model=question_answer_model,
+                                    tokenizer=question_answer_tokenizer)
+        pipelines[model_name] = current_pipeline
+        # Sets the first model found as the default one.
+        if default_pipeline is None:
+            default_pipeline = current_pipeline
+
+    return pipelines, default_pipeline
 
 
 class Model:
 
     def __init__(self, path: str):
-        self.max_seq_length = 384
-        self.doc_stride = 128
-        self.max_query_length = 64
-        self.do_lower_case = True
-        self.n_best_size = 20
-        self.max_answer_length = 30
-        self.eval_batch_size = 1
-        self.model, self.tokenizer = self.model_load(path)
-        self.model.eval()
+        PATH_ENV_VARIABLE = "MODELS_PATH"
+        # If a environment variable with MODEL_PATH has been set, then use it.
+        path = environ[PATH_ENV_VARIABLE] if environ.get(PATH_ENV_VARIABLE) is not None else path
+        self.pipelines, self.default_pipeline = load_models(path)
 
-    def model_load(self, path):
+    def get_pipeline(self, model_name):
+        """
+        Chooses which pipeline to use.
+        If no model_name is specific then use the default pipeline.
+        if a model_name is provided but it doesn't exist, then return the default pipeline.
+        @param model_name: Name of the model.
+        @return: Pipeline associated to the model name.
+        """
+        if model_name is None or model_name not in self.pipelines.keys():
+            return self.default_pipeline
+        else:
+            return self.pipelines[model_name]
 
-        s3_model_url = 'https://distilbert-finetuned-model.s3.eu-west-2.amazonaws.com/pytorch_model.bin'
-        path_to_model = download_model(s3_model_url, model_name="pytorch_model.bin")
+    def predict(self, contexts, question, model_name):
+        """
+        Locates the answer to a question across several context texts.
+        @param contexts: Possible answers.
+        @param question: Posed question.
+        @param model_name: Model name to use.
+        @return: Object which contains the answer, its position and a score.
+        """
+        questions = [question] * len(contexts)  # There must be a context text per asked question
+        selected_pipeline = self.get_pipeline(model_name)
+        answers = selected_pipeline(question=questions, context=contexts)
 
-        config = DistilBertConfig.from_pretrained(path + "/config.json")
-        tokenizer = DistilBertTokenizer.from_pretrained(path, do_lower_case=self.do_lower_case)
-        model = DistilBertForQuestionAnswering.from_pretrained(path_to_model, from_tf=False, config=config)
+        # if a single element is returned, then convert it to list
+        if not isinstance(answers, list):
+            answers = [answers]
 
-        return model, tokenizer
-
-    def predict(self, context, question):
-
-        context = context.lower()
-        question = question.lower()
-
-        examples = read_squad_examples(context, question)
-        features = convert_examples_to_features(
-            examples, self.tokenizer, self.max_seq_length, self.doc_stride, self.max_query_length)
-
-        # Convert to Tensors and build dataset
-        all_input_ids = torch.tensor(
-            [f.input_ids for f in features], dtype=torch.long)
-        all_input_mask = torch.tensor(
-            [f.input_mask for f in features], dtype=torch.long)
-        all_segment_ids = torch.tensor(
-            [f.segment_ids for f in features], dtype=torch.long)
-        all_example_index = torch.arange(
-            all_input_ids.size(0), dtype=torch.long)
-        dataset = TensorDataset(all_input_ids, all_input_mask, all_segment_ids,
-                                all_example_index)
-
-        eval_sampler = SequentialSampler(dataset)
-        eval_dataloader = DataLoader(
-            dataset, sampler=eval_sampler, batch_size=self.eval_batch_size)
-
-        all_results = []
-        for batch in (eval_dataloader):
-            batch = tuple(t for t in batch)
-            with torch.no_grad():
-                inputs = {'input_ids':      batch[0],
-                          'attention_mask': batch[1]
-                          }
-                example_indices = batch[3]
-                outputs = self.model(**inputs)
-
-            for i, example_index in enumerate(example_indices):
-                eval_feature = features[example_index.item()]
-                unique_id = int(eval_feature.unique_id)
-                result = RawResult(unique_id=unique_id,
-                                   start_logits=to_list(outputs[0][i]),
-                                   end_logits=to_list(outputs[1][i]))
-                all_results.append(result)
-
-        answer = write_predictions(examples, features, all_results,
-                                   self.do_lower_case, self.n_best_size, self.max_answer_length)
-        return answer
-
-model = Model('model')
+        return answers
