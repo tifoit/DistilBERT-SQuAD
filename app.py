@@ -57,7 +57,7 @@ def predict():
         prediction['id'] = chunk['id']
 
         if 'answer' in prediction and prediction['answer']:
-            prediction['highlight'] = highlight(chunk['text'], prediction['answer'], style)
+            prediction['highlight'] = highlight(chunk['text'], prediction, style)
 
         response.append(prediction)
 
@@ -72,17 +72,15 @@ def highlight(text, answer, style):
     @param style: Highlighting option.
     @return: Returns text with highlighted answer.
     """
-    left_index = text.lower().find(answer.lower())
 
-    if left_index > -1:
-        right_index = left_index + len(answer)
-        pre = text[:left_index]
-        inner = text[left_index:right_index]
-        post = text[right_index:]
-        return pre + '<span class="' + style + '">' + inner + '</span>' + post
-    else:
-        return text
+    start_pos = answer['start']
+    end_pos = answer['end']
 
+    pre = text[:start_pos]
+    text_to_highlight = text[start_pos:end_pos]
+    post = text[end_pos:]
+
+    return '{}<span class="{}">{}</span>{}'.format(pre, style, text_to_highlight, post)
 
 def error_message(message, status):
     """Builds a JSON response with an error message"""
