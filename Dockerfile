@@ -5,6 +5,7 @@ FROM python:3.7-slim
 ENV WORKERS=1
 ENV THREADS=8
 ENV TIMEOUT=900
+ENV MODELS_PATH='./models'
 
 # Copy local code to the container image.
 ENV APP_HOME /app
