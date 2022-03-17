@@ -90,7 +90,7 @@ docker build -t distilbert-squad-flask .
 ## Run the container
 
 ```bash
-docker run -dp 8080:8080 -e WORKERS=2 -e THREADS=8 -e TIMEOUT=900 distilbert-squad-flask
+docker run -dp 8080:8080 -e WORKERS=2 -e THREADS=8 -e TIMEOUT=900 -e MODELS_PATH="./models" distilbert-squad-flask
 ```
 
 # Example Queries
