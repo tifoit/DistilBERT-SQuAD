@@ -9,6 +9,9 @@ import datetime
 
 app = flask.Flask(__name__)
 
+'''
+A path is passed when creating models. This can also be overriden as a environmental variable.
+'''
 model = Model(path="./models")
 
 
@@ -81,6 +84,7 @@ def highlight(text, answer, style):
     post = text[end_pos:]
 
     return '{}<span class="{}">{}</span>{}'.format(pre, style, text_to_highlight, post)
+
 
 def error_message(message, status):
     """Builds a JSON response with an error message"""
