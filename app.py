@@ -64,7 +64,8 @@ def predict():
 
         response.append(prediction)
 
-    return Response(json.dumps(response), mimetype='application/json')
+    return Response(json.dumps(sorted(response, key=lambda answer: answer['score'], reverse=True)),
+                    mimetype='application/json')
 
 
 def highlight(text, answer, style):
