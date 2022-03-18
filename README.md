@@ -1,38 +1,41 @@
-# DistilBERT-SQuAD
+# Answer Location Service
 
-[![Website](https://img.shields.io/website?down_message=offline&up_message=online&url=https%3A%2F%2Fqa.oliverproud.com)](https://qa.oliverproud.com)
+This projects provides an Answer Location Service, whereby given a question and a text the answer is going to be located within that text.
 
+For example:
 
-# What is DistilBERT?
+Question: ```How many games are required to win the FA Cup?```
 
-Thanks to the brilliant people at [Hugging Face 🤗](https://huggingface.co/) we now have DistilBERT, which stands for Distilated-BERT. DistilBERT is a small, fast, cheap and light Transformer model based on Bert architecture. It has 40% less parameters than `bert-base-uncased`, runs 60% faster while preserving 97% of BERT's performance as measured on the GLUE language understanding benchmark. DistilBERT is trained using knowledge distillation, a technique to compress a large model called the teacher into a smaller model called the student. By distillating Bert, we obtain a smaller Transformer model that bears a lot of similarities with the original BERT model while being lighter, smaller and faster to run. DistilBERT is thus an interesting option to put large-scaled trained Transformer model into production. [Transformers - Hugging Face repository](https://github.com/huggingface/transformers)
+Text: ```The FA Cup is open to any eligible club down to Level 10 of the English football league system – 20 professional clubs in the Premier League (level 1),72 professional clubs in the English Football League (levels 2 to 4), and several hundred non-League teams in steps 1 to 6 of the National League System (levels 5 to 10). A record 763 clubs competed in 2011–12. The tournament consists of 12 randomly drawn rounds followed by the semi-finals and the final. Entrants are not seeded, although a system of byes based on league level ensures higher ranked teams enter in later rounds.  The minimum number of games needed to win, depending on which round a team enters the competition, ranges from six to fourteen```
 
-Victor Sanh of Hugging Face [wrote a great Medium post](https://medium.com/huggingface/distilbert-8cf3380435b5) introducing DistilBERT and explaining parts of their newly released [NeurIPS 2019 Workshop paper](https://arxiv.org/abs/1910.01108)
+Answer: ```six to fourteen```
 
+The code found in this repository acts as an API built on top of a Hugging Face based model which is accessed using the [transformers library](https://github.com/huggingface/transformers). [Hugging Face](https://huggingface.co/models) models are supported, as well as custom ones (that is, not available from the Hugging Face's repository).
 
-# The Stanford Question Answering Dataset (SQuAD)
+# Local Installation
 
-Stanford Question Answering Dataset (SQuAD) is a reading comprehension dataset, consisting of questions posed by crowdworkers on a set of Wikipedia articles, where the answer to every question is a segment of text, or span, from the corresponding reading passage, or the question might be unanswerable.
+## Download Models
 
-https://rajpurkar.github.io/SQuAD-explorer/
+### Hugging Face Models
 
-# Installation
+First and foremost, you need to download models locally. For this, `init_models.py` can be executed. In here you can configure the models to download and a path where they will be stored:
 
-If you are testing this on your own machine I would recommend you run it in a virtual environment or use Docker, as not to affect the rest of your files.
-
-### Docker
-
-Build the container:
-
-```bash
-docker build -t distilbert-squad-flask .
+```python
+models = [{"model": 'deepset/roberta-base-squad2'},
+          {"model": 'oliverproud/distilbert-finetuned-model'},
+          {"model": 'mrm8488/distilbert-multi-finetuned-for-xqua-on-tydiqa'},
+          {"model": 'distilbert-base-cased-distilled-squad'}]
+path = "./models"
 ```
+THe model name needs to match the name in the [Hugging Face repository](https://huggingface.co/models).
 
-Run the container:
+### Custom Models
 
-```bash
-docker run -dp 8080:8080 -e WORKERS=2 -e THREADS=8 -e TIMEOUT=900 distilbert-squad-flask
-```
+Custom models can be installed too, however this needs to be done manually. You will need to copy your model to the expected path (as defined in variable `path`).
+
+## Set up Environment
+
+NOTE: Instead of following the steps below, a Python IDE such as PyCharm can be used. This will take care of most of these details.
 
 ### Python venv
 
@@ -62,55 +65,94 @@ Install the requirements with:
 pip3 install -r requirements.txt
 ```
 
-### Contact
+## Start Up the Service
 
-If you have any questions, feedback or problems of any kind, get in touch by messaging me on [Twitter - @oliverwproud](https://twitter.com/oliverwproud) or by submitting an issue.
+Execute the `app.py` script. At startup, this will load all models found in a specific path. 
 
-### SQuAD Fine-tuned model
+NOTE: This path defaults to `./models` but it can be overriden with an environment variable.
 
-The SQuAD fine-tuned model is available in my [S3 Bucket](https://distilbert-finetuned-model.s3.eu-west-2.amazonaws.com/pytorch_model.bin) or alternatively inside the model.py file you can specify the type of model you wish to use, the one I have provided, or a Hugging Face fine-tuned SQuAD model
 
-`distilbert-base-uncased-distilled-squad`.
+# Docker
 
-You can do this with
+## Models
 
-```python
-model = DistilBertForQuestionAnswering.from_pretrained('distilbert-base-uncased-distilled-squad', config=config)
-```
+Models need to be downloaded to the `models` folder within the project (at the same level as the `Dockerfile`). These will be copied to the image.
 
-# How to train (Distil)BERT
+NOTE: This is acceptable for local Docker testing only. When running this in a Kubernetes cluster, models will be loaded to a NFS and the pod will read them from there.
 
-The data for SQuAD can be downloaded with the following links and should be saved in a $SQUAD_DIR directory.
 
-- [train-v1.1.json](https://rajpurkar.github.io/SQuAD-explorer/dataset/train-v1.1.json)
-
-- [dev-v1.1.json](https://rajpurkar.github.io/SQuAD-explorer/dataset/dev-v1.1.json)
-
-- [evaluate-v1.1.py](https://github.com/allenai/bi-att-flow/blob/master/squad/evaluate-v1.1.py)
-
-Training on one Tesla V100 16GB GPU, each epoch took around 9 minutes to complete, in comparison training on a single Quadro M4000 the time for each epoch took over 2 hours, so don't be alarmed if your training isn't lightning fast.
+## Build the container
 
 ```bash
-export SQUAD_DIR=/path/to/SQUAD
-
-python run_squad.py \
-  --model_type distilbert \
-  --model_name_or_path distilbert-base-uncased \
-  --do_train \
-  --do_eval \
-  --do_lower_case \
-  --train_file $SQUAD_DIR/train-v1.1.json \
-  --predict_file $SQUAD_DIR/dev-v1.1.json \
-  --per_gpu_train_batch_size 12 \
-  --learning_rate 3e-5 \
-  --num_train_epochs 2.0 \
-  --max_seq_length 384 \
-  --doc_stride 128 \
-  --output_dir /tmp/debug_squad/
+docker build -t distilbert-squad-flask .
 ```
 
-# References
+## Run the container
 
-- <https://github.com/huggingface/transformers>
-- <https://medium.com/huggingface/distilbert-8cf3380435b5>
-- <https://cloud.google.com/run/docs/quickstarts/build-and-deploy#python>
+```bash
+docker run -dp 8080:8080 -e WORKERS=2 -e THREADS=8 -e TIMEOUT=900 -e MODELS_PATH="./models" distilbert-squad-flask
+```
+
+# Example Queries
+
+## Predict
+Verb: `POST`
+
+Endpoint: `http://localhost:8080/predict`
+
+Payload: 
+```json
+{
+    "model": "distilbert-base-cased-distilled-squad",
+    "question": "How many games are required to win the FA Cup?",
+    "chunks": [
+        {
+            "text": "The FA Cup is open to any eligible club down to Level 10 of the English football league system – 20 professional clubs in the Premier League (level 1),72 professional clubs in the English Football League (levels 2 to 4), and several hundred non-League teams in steps 1 to 6 of the National League System (levels 5 to 10). A record 763 clubs competed in 2011–12. The tournament consists of 12 randomly drawn rounds followed by the semi-finals and the final. Entrants are not seeded, although a system of byes based on league level ensures higher ranked teams enter in later rounds.  The minimum number of games needed to win, depending on which round a team enters the competition, ranges from six to fourteen.",
+            "id": "1"
+        },
+         {
+            "text": "The first six rounds are the Qualifying Competition, from which 32 teams progress to the first round of the Competition Proper, meeting the first of the 48 professional teams from Leagues One and Two. The last entrants are the Premier League and Championship clubs, into the draw for the Third Round Proper.[2] In the modern era, only one non-League team has ever reached the quarter-finals, and teams below Level 2 have never reached the final.[note 1] As a result, significant focus is given to the smaller teams who progress furthest, especially if they achieve an unlikely \"giant-killing\" victory.",
+            "id": "2"
+        }
+    ]
+}
+```
+
+Sample Response:
+```json
+[
+    {
+        "score": 0.5027955770492554,
+        "start": 693,
+        "end": 708,
+        "answer": "six to fourteen",
+        "id": "1",
+        "highlight": "The FA Cup is open to any eligible club down to Level 10 of the English football league system – 20 professional clubs in the Premier League (level 1),72 professional clubs in the English Football League (levels 2 to 4), and several hundred non-League teams in steps 1 to 6 of the National League System (levels 5 to 10). A record 763 clubs competed in 2011–12. The tournament consists of 12 randomly drawn rounds followed by the semi-finals and the final. Entrants are not seeded, although a system of byes based on league level ensures higher ranked teams enter in later rounds.  The minimum number of games needed to win, depending on which round a team enters the competition, ranges from <span class=\"highlight\">six to fourteen</span>."
+    },
+    {
+        "score": 0.15806056559085846,
+        "start": 10,
+        "end": 13,
+        "answer": "six",
+        "id": "2",
+        "highlight": "The first <span class=\"highlight\">six</span> rounds are the Qualifying Competition, from which 32 teams progress to the first round of the Competition Proper, meeting the first of the 48 professional teams from Leagues One and Two. The last entrants are the Premier League and Championship clubs, into the draw for the Third Round Proper.[2] In the modern era, only one non-League team has ever reached the quarter-finals, and teams below Level 2 have never reached the final.[note 1] As a result, significant focus is given to the smaller teams who progress furthest, especially if they achieve an unlikely \"giant-killing\" victory."
+    }
+]
+```
+
+## Models
+Verb: `GET`
+
+Endpoint: `http://localhost:8080/models`
+
+Payload: None
+
+Sample Result:
+```json
+[
+    "deepset/roberta-base-squad2",
+    "distilbert-base-cased-distilled-squad",
+    "mrm8488/distilbert-multi-finetuned-for-xqua-on-tydiqa",
+    "models\\oliverproud\\distilbert-finetuned-model"
+]
+```
