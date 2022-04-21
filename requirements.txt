@@ -1,6 +1,11 @@
-itsdangerous==1.1.0
-torch==1.11.0
+itsdangerous==2.0
 transformers==4.17.0
-Flask==1.1.1
+Flask==2.0.3
 requests==2.23.0
 gunicorn
+spacy>=3.0.0,<4.0.0
+https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.0.0/en_core_web_sm-3.0.0.tar.gz#egg=en_core_web_sm
+numpy~=1.22.3
+scikit-learn~=1.0.2
+-f https://download.pytorch.org/whl/torch_stable.html
+torch==1.11.0+cu113
