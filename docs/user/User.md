@@ -1,18 +1,11 @@
-# Answer Location Service
+<!-- Space: PDP -->
+<!-- Parent: User Documentation -->
+<!-- Parent: Distilbert Squad -->
+<!-- Title: Distilbert Squad -->
 
-This projects provides an Answer Location Service, whereby given a question and a text the answer is going to be located within that text.
+# PDP Distilbert 
 
-For example:
-
-Question: ```How many games are required to win the FA Cup?```
-
-Text: ```The FA Cup is open to any eligible club down to Level 10 of the English football league system – 20 professional clubs in the Premier League (level 1),72 professional clubs in the English Football League (levels 2 to 4), and several hundred non-League teams in steps 1 to 6 of the National League System (levels 5 to 10). A record 763 clubs competed in 2011–12. The tournament consists of 12 randomly drawn rounds followed by the semi-finals and the final. Entrants are not seeded, although a system of byes based on league level ensures higher ranked teams enter in later rounds.  The minimum number of games needed to win, depending on which round a team enters the competition, ranges from six to fourteen```
-
-Answer: ```six to fourteen```
-
-The code found in this repository acts as an API built on top of a Hugging Face based model which is accessed using the [transformers library](https://github.com/huggingface/transformers). [Hugging Face](https://huggingface.co/models) models are supported, as well as custom ones (that is, not available from the Hugging Face's repository).
-
-# Local Installation
+This repository contains code related to NLP tasks.
 
 ## Download Models
 
@@ -33,69 +26,13 @@ THe model name needs to match the name in the [Hugging Face repository](https://
 
 Custom models can be installed too, however this needs to be done manually. You will need to copy your model to the expected path (as defined in variable `path`).
 
-## Set up Environment
 
-NOTE: Instead of following the steps below, a Python IDE such as PyCharm can be used. This will take care of most of these details.
-
-### Python venv
-
-In Python3 you can set up a virtual environment with
-
-```bash
-python3 -m venv /path/to/new/virtual/environment
-```
-
-Or by installing virtualenv with pip by doing
-```bash
-pip3 install virtualenv
-```
-Then creating the environment with
-```bash
-virtualenv venv
-```
-and finally activating it with
-```bash
-source venv/bin/activate
-```
-
-You must have Python3
-
-Install the requirements with:
-```bash
-pip3 install -r requirements.txt
-```
-
-## Start Up the Service
-
-Execute the `app.py` script. At startup, this will load all models found in a specific path. 
-
-NOTE: This path defaults to `./models` but it can be overriden with an environment variable.
-
-
-# Docker
-
-## Models
-
-Models need to be downloaded to the `models` folder within the project (at the same level as the `Dockerfile`). These will be copied to the image.
-
-NOTE: This is acceptable for local Docker testing only. When running this in a Kubernetes cluster, models will be loaded to a NFS and the pod will read them from there.
-
-
-## Build the container
-
-```bash
-docker build -t distilbert-squad-flask .
-```
-
-## Run the container
-
-```bash
-docker run -dp 8080:8080 -e WORKERS=2 -e THREADS=8 -e TIMEOUT=900 -e MODELS_PATH="./models" distilbert-squad-flask
-```
-
-# Example Queries
+# Endpoints 
 
 ## Predict
+
+Given a question and one or various texts, extract from each text the section containing the answer to the question.
+
 Verb: `POST`
 
 Endpoint: `http://localhost:8080/predict`
@@ -117,6 +54,21 @@ Payload:
     ]
 }
 ```
+
+## Parameters:
+
+`model` - Optional, string.
+
+Model to be used to make the prediction, to see the available options use the models endpoint.
+
+`question` - Required, string.
+
+Question to ask the model
+
+`chunks` - Required, node list.
+
+List of nodes containing a text and an id (both string), an answer will be extracted (if possible) from every text in the chunk
+
 
 Sample Response:
 ```json
@@ -141,6 +93,9 @@ Sample Response:
 ```
 
 ## Models
+
+Get all the models that can be found at the .models path
+
 Verb: `GET`
 
 Endpoint: `http://localhost:8080/models`
@@ -158,6 +113,9 @@ Sample Result:
 ```
 
 ## Train
+
+Adds new vocabulary to a model based on the given data and trains it on masked language modeling.
+
 Verb: `POST`
 
 Endpoint: `http://localhost:8080/train`
@@ -172,11 +130,48 @@ Payload:
 }
 ```
 
-Sample Response:
+## Parameters:
+
+`output_path` - Required, string.
+
+Path where the model will be saved
+
+`model` - Required, string.
+
+Name of the hugging face model that will be used for training, names can be found at the [Hugging face repository](https://huggingface.co/models).
+A path to a model located at disk can also be provided in this field.
+
+`data` - Required, string list.
+
+Field name where output data will be placed.
+
+`batch_training` - Optional, integer. Default is 2
+
+Size of batch that will be used during training
+
+Sample Result:
+
 ```json
 {
   "message": "MLM Training finished, model saved at: 'C:\\Users\\AdrianaMorales\\Desktop\\test'",
   "added_tokens": [...],
   "timestamp": "2022-04-22T08:54:17.050676"
+}
+```
+
+## Status
+
+Indicates if the service is currently training a model.
+
+Verb: `GET`
+
+Endpoint: `http://localhost:8080/status`
+
+Payload: None
+
+Sample Result:
+```json
+{
+  "training_status": true
 }
 ```

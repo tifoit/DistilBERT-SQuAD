@@ -54,7 +54,7 @@ def status():
 def train_vocab():
     """
     Adds new vocabulary and trains a model on the given data.
-    @return: Response in JSON format.
+    @return: Response in JSON format containing path where the model was saved and the added tokens.
     """
 
     body = request.get_json()
@@ -194,6 +194,14 @@ class TrainDataset(torch.utils.data.Dataset):
 
 
 def train_mlm(docs, loaded_model, tokenizer, output_path, batch_size):
+    """
+    Trains a given model with the data received for Masked Language Modeling
+    @param docs: Data to use to train the model
+    @param loaded_model: Model to train
+    @param tokenizer: Tokenizer to use
+    @param output_path: Path where the model will be saved
+    @param batch_size: Batch size to use for training
+    """
     inputs = tokenizer(docs, return_tensors='pt', max_length=512, truncation=True, padding='max_length')
     inputs['labels'] = inputs.input_ids.detach().clone()
 
@@ -242,6 +250,13 @@ def train_mlm(docs, loaded_model, tokenizer, output_path, batch_size):
 
 
 def get_new_tokens(documents, tokenizer):
+    """
+    Get a list containing words that can be found in the given sentences but not in the tokenizer
+    @param documents: Sentences from where tokens will be extracted
+    @param tokenizer: Tokenizer from which the vocabulary will be extracted
+    @return: List of tokens that aren't in the tokenizer
+
+    """
     tfidf_vectorizer = TfidfVectorizer(lowercase=False, tokenizer=spacy_tokenizer, norm='l2', use_idf=True,
                                        smooth_idf=True, sublinear_tf=False)
 
@@ -278,6 +293,11 @@ def get_new_tokens(documents, tokenizer):
 
 
 def spacy_tokenizer(document):
+    """
+    Tokenizes sentences with spacy
+    @param document: Sentence to tokenize
+    @return: Tokens of sentence
+    """
     # tokenize the document with spaCY
     global nlp
     doc = nlp(document)
