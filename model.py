@@ -19,7 +19,7 @@ def download_models(models, path):
         download_model(path, model)
 
 
-def load_models(path):
+def load_models(path, device):
     """
     Iterates over a specific path and loads all models available.
     For each model a pipeline is created and stored in a pipelines map,
@@ -28,6 +28,7 @@ def load_models(path):
     @param path: Location to scan.
     @return: Tuple consisting of: a map of pipelines and a default pipeline.
     """
+    print("Loading models...")
     pipelines = {}
     default_pipeline = None
     config_file = 'config.json'
@@ -46,12 +47,14 @@ def load_models(path):
 
         current_pipeline = pipeline('question-answering',
                                     model=question_answer_model,
-                                    tokenizer=question_answer_tokenizer)
+                                    tokenizer=question_answer_tokenizer,
+                                    device=device)
+
         pipelines[model_name] = current_pipeline
         # Sets the first model found as the default one.
         if default_pipeline is None:
             default_pipeline = current_pipeline
-
+        print(f"Model loaded: $model_name")
     return pipelines, default_pipeline
 
 
@@ -59,9 +62,16 @@ class Model:
 
     def __init__(self, path: str):
         PATH_ENV_VARIABLE = "MODELS_PATH"
-        # If a environment variable with MODEL_PATH has been set, then use it.
+        CPU_GPU_DEVICE_VARIABLE = "CPU_GPU_DEVICE"
+        # If an environment variable with MODEL_PATH has been set, then use it.
         path = environ[PATH_ENV_VARIABLE] if environ.get(PATH_ENV_VARIABLE) is not None else path
-        self.pipelines, self.default_pipeline = load_models(path)
+        '''
+        Device ordinal for CPU/GPU supports. 
+        Setting this to -1 will leverage CPU, >=0 will run the model on the associated CUDA device id.
+        See https://huggingface.co/transformers/v3.0.2/main_classes/pipelines.html
+        '''
+        device = environ[CPU_GPU_DEVICE_VARIABLE] if environ.get(CPU_GPU_DEVICE_VARIABLE) is not None else -1
+        self.pipelines, self.default_pipeline = load_models(path, device)
 
     def get_pipeline(self, model_name):
         """
