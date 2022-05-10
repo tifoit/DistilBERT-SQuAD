@@ -70,7 +70,7 @@ class Model:
         Setting this to -1 will leverage CPU, >=0 will run the model on the associated CUDA device id.
         See https://huggingface.co/transformers/v3.0.2/main_classes/pipelines.html
         '''
-        device = environ[CPU_GPU_DEVICE_VARIABLE] if environ.get(CPU_GPU_DEVICE_VARIABLE) is not None else -1
+        device = environ[CPU_GPU_DEVICE_VARIABLE] if int(environ.get(CPU_GPU_DEVICE_VARIABLE)) is not None else -1
         self.pipelines, self.default_pipeline = load_models(path, device)
 
     def get_pipeline(self, model_name):
